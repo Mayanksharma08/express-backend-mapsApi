@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 
 app.use("/auth",authRouter);
-app.use("*",authMiddleware);
+app.use("/auth",authMiddleware);
 app.use('/users',userRouter);
 app.use(errorMiddleware);
 

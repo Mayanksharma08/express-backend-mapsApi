@@ -5,8 +5,14 @@ const jwtSecret = require("../config/jwtSecret");
 
 exports.loginUser = async (req,res,next) => {
     try{
-    const {email, password} = req.body;
+    const {email, password, phone} = req.body;
     const user = await User.findOne({email});
+
+    if(!phone){
+        const error = new Error("Phone number required");
+        error.statusCode = 401;
+        throw error;
+    }
 
     if(user){
         const isPasswordCorrect = await bcrypt.compare(password,user.password);
@@ -28,7 +34,7 @@ exports.loginUser = async (req,res,next) => {
 
 exports.createUser = async (req,res,next) => {
 try{  
-    const { email, password} = req.body;
+    const { email, password, phone} = req.body;
     if(await User.findOne({email})){
         const error = new Error(`An account with this ${email} exists`);
         error.statusCode = 409;
@@ -39,7 +45,8 @@ try{
     
     const user = new User({
         email,
-        password: hashPassword
+        password: hashPassword,
+        phone
     });
     const result=await user.save();
     res.send(result);

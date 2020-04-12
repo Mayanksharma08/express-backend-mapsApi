@@ -2,13 +2,12 @@ const User = require('../model/User');
 
 exports.getUsers = async (req,res,next) => {
     try{
-        const usersFromDb = await User.find({});
-        const users = usersFromDb.map(({firstName, lastName, email}) => ({
-            firstName,
-            lastName,
-            email
+        const {email} = req.body;
+        const usersFromDb = await User.find({email});
+        const users = usersFromDb.map(({phone}) => ({
+            phone
         }));
-        return res.send({users});
+        return res.send(users);
     } catch(err){
         next(err);
     }
